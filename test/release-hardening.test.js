@@ -36,7 +36,7 @@ test('security-sensitive dependencies are pinned to patched release lines', () =
     assert.match(lock.packages['node_modules/' + name]?.integrity || '', /^sha512-/);
   }
   for (const [name, version] of Object.entries({
-    'body-parser': '2.4.0', compression: '1.8.2', 'proxy-addr': '2.0.8', qs: '6.17.0',
+    'body-parser': '2.4.0', 'proxy-addr': '2.0.8', qs: '6.17.0',
     'engine.io': '6.6.11', 'socket.io-parser': '4.2.7'
   })) assert.equal(pkg.overrides[name], version);
   assert.equal(pkg.dependencies.compression, '^1.8.2');
