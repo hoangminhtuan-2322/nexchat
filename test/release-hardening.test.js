@@ -20,16 +20,26 @@ test('release metadata and lockfile agree on NexChat 1.0.0', () => {
   assert.equal(pkg.engines.node, '>=22');
 });
 
-test('security-sensitive dependencies are pinned to fixed release lines', () => {
-  assert.equal(lock.packages['node_modules/multer'].version, '2.5.0');
-  assert.equal(lock.packages['node_modules/socket.io'].version, '4.8.4');
-  assert.equal(lock.packages['node_modules/engine.io'].version, '6.6.11');
-  assert.equal(lock.packages['node_modules/socket.io-parser'].version, '4.2.7');
-  for (const name of ['multer', 'socket.io', 'engine.io', 'socket.io-parser']) {
-    assert.match(lock.packages[`node_modules/${name}`].integrity || '', /^sha512-/);
+test('security-sensitive dependencies are pinned to patched release lines', () => {
+  const expected = {
+    multer: '2.5.0',
+    'socket.io': '4.8.4',
+    'engine.io': '6.6.11',
+    'socket.io-parser': '4.2.7',
+    'body-parser': '2.4.0',
+    compression: '1.8.2',
+    'proxy-addr': '2.0.8',
+    qs: '6.16.1'
+  };
+  for (const [name, version] of Object.entries(expected)) {
+    assert.equal(lock.packages['node_modules/' + name]?.version, version, name + ' must be patched');
+    assert.match(lock.packages['node_modules/' + name]?.integrity || '', /^sha512-/);
   }
-  assert.equal(pkg.overrides['engine.io'], '6.6.11');
-  assert.equal(pkg.overrides['socket.io-parser'], '4.2.7');
+  for (const [name, version] of Object.entries({
+    'body-parser': '2.4.0', 'proxy-addr': '2.0.8', qs: '6.16.1',
+    'engine.io': '6.6.11', 'socket.io-parser': '4.2.7'
+  })) assert.equal(pkg.overrides[name], version);
+  assert.equal(pkg.dependencies.compression, '^1.8.2');
 });
 
 test('Docker uses a supported Node LTS and a dedicated persistent data directory', () => {
