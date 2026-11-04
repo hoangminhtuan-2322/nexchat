@@ -38,7 +38,7 @@ jobs:
             'body-parser': '2.4.0',
             'compression': '1.8.2',
             'proxy-addr': '2.0.8',
-            'qs': '6.16.1',
+            'qs': '6.17.0',
             'multer': '2.5.0',
             'socket.io': '4.8.4',
             'engine.io': '6.6.11',
